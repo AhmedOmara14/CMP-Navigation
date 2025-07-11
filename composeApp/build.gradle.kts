@@ -50,6 +50,11 @@ kotlin {
             implementation(libs.voyager.screenmodel)
             implementation(libs.voyager.koin)
 
+            //Precompose
+            implementation(libs.precompose.core)
+            implementation(libs.precompose.viewmodel)
+            implementation(libs.precompose.koin)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
