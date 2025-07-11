@@ -1,43 +1,82 @@
-# Voyager Navigation Sample
+# 🧭 KMP Navigation Samples – Voyager & PreCompose
 
-This is a simple Kotlin Multiplatform (KMP) project demonstrating usage of the [Voyager Navigation Library](https://github.com/adrielcafe/voyager) with Jetpack Compose.
+This Kotlin Multiplatform (KMP) project demonstrates two navigation approaches using **Jetpack Compose**:
+
+1. **[Voyager Navigation](https://github.com/adrielcafe/voyager)** – screen-based, scalable navigation
+2. **[PreCompose Navigation](https://github.com/Tlaster/PreCompose)** – type-safe, route-based navigation with lightweight setup
+
+---
 
 ## 🚀 Purpose
 
-The goal of this project is to **practice and demonstrate clean navigation using Voyager** across a Home and Details screen setup.
+The goal of this project is to practice and demonstrate clean, testable navigation setups using both **Voyager** and **PreCompose**, with shared concepts across:
 
+- `HomeScreen`  
+- `DetailsScreen`  
+- Navigation with and without arguments  
+- Preview support
+
+---
 
 ## 📱 Screens
 
-- **HomeScreen** → displays a basic UI and navigates to the DetailsScreen
-- **DetailsScreen** → shows details
+- **HomeScreen** → Entry screen that lists items and navigates forward
+- **DetailsScreen** → Receives item data and displays details
 
-## 🧭 Navigation
+---
 
-- Navigation is handled using **Voyager Screens**
-- Navigator interfaces (`HomeNavigator`, `DetailsNavigator`) separate logic for testability
-- Mock implementations are used in `Preview` files for UI previewing without real navigation
+## 🧭 Navigation Approaches
 
-## ✅ Highlights
+### 🌀 Voyager (Screen-based)
+- Uses `Screen` implementations for each destination
+- Navigation via `Navigator.push(...)`
+- Clean separation using `HomeNavigator` / `DetailsNavigator` interfaces
+- Previews use `MockNavigators` for isolated screen testing
 
-- Clean separation of screens and navigation logic
-- Previews work with `MockNavigators`
-- Scalable structure for adding more screens
+### 🔁 PreCompose (Route-based)
+- Uses `NavHost`, `scene`, `Navigator`, and dynamic route strings
+- Passes arguments like `id` and `name` through encoded routes
+- `popBackStack()` used to navigate up
+- Minimal boilerplate and great for KMP targets
 
-## ▶️ How to Run
+---
 
-Open the project in **Android Studio**, and run the app on an Android device or emulator.
+## ✨ PreCompose Sample
 
-To preview screens:
-- Open `HomeScreenPreview.kt` or `DetailsScreenPreview.kt`
-- Click **"Split"** or **"Design"** view to see Jetpack Compose Preview
+```kotlin
+enum class Features(val route: String) {
+    Home("/Home"),
+    Details("/Details");
 
-## 🛠 Tech Stack
+    companion object {
+        fun detailsWithArgs(id: Int, name: String): String =
+            "/Details/$id/${Uri.encode(name)}"
 
-- Kotlin Multiplatform
-- Jetpack Compose
-- Voyager Navigation
-- Compose Previews
+        const val DetailsRouteWithArgs = "/Details/{id}/{name}"
+    }
+}
 
+@Composable
+fun NavGraph(navController: Navigator = rememberNavigator()) {
+    NavHost(navigator = navController, initialRoute = Features.Home.route) {
+        scene(Features.Home.route) {
+            HomeScreen { item ->
+                navController.navigate(Features.detailsWithArgs(item.id, item.name))
+            }
+        }
+        scene(Features.DetailsRouteWithArgs) { backStackEntry ->
+            val id = backStackEntry.path<String>("id")?.toIntOrNull()
+            val name = backStackEntry.path<String>("name")?.let { Uri.decode(it) }
 
+            DetailsScreen(id = id, name = name) {
+                navController.popBackStack()
+            }
+        }
+    }
+}
 
+setContent {
+    PreComposeApp {
+        NavGraph()
+    }
+}
