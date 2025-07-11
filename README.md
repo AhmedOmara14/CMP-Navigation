@@ -1,14 +1,63 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# 🚀 PreCompose Navigation
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+This is a simple Kotlin Multiplatform (KMP) Android project demonstrating how to use **PreCompose** for type-safe, declarative navigation in a Jetpack Compose-based app.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## 📦 Tech Stack
 
+- **Jetpack Compose**
+- **PreCompose** by [@Tlaster](https://github.com/Tlaster/PreCompose)
+- **Kotlin Multiplatform-ready structure**
+- Minimal, clean navigation using `NavHost`, `scene`, and `Navigator`
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+---
+
+## 🧭 Features
+
+- PreCompose navigation between `HomeScreen` and `DetailsScreen`
+- Dynamic route arguments (`id`, `name`) passed via the navigation route
+- Back navigation using `popBackStack()`
+
+---
+
+## 🗺️ Navigation Setup
+
+```kotlin
+enum class Features(val route: String) {
+    Home("/Home"),
+    Details("/Details");
+
+    companion object {
+        fun detailsWithArgs(id: Int, name: String): String {
+            return "/Details/$id/${Uri.encode(name)}"
+        }
+
+        const val DetailsRouteWithArgs = "/Details/{id}/{name}"
+    }
+}
+
+@Composable
+fun NavGraph(navController: Navigator = rememberNavigator()) {
+    NavHost(navigator = navController, initialRoute = Features.Home.route) {
+
+        scene(route = Features.Home.route) {
+            HomeScreen { item ->
+                navController.navigate(Features.detailsWithArgs(item.id, item.name))
+            }
+        }
+
+        scene(route = Features.DetailsRouteWithArgs) { backStackEntry ->
+            val id = backStackEntry.path<String>("id")?.toIntOrNull()
+            val name = backStackEntry.path<String>("name")?.let { Uri.decode(it) }
+
+            DetailsScreen(id = id, name = name) {
+                navController.popBackStack()
+            }
+        }
+    }
+}
+
+setContent {
+    PreComposeApp {
+        NavGraph()
+    }
+}
