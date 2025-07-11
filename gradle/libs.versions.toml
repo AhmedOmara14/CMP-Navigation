@@ -14,7 +14,7 @@ composeMultiplatform = "1.8.2"
 junit = "4.13.2"
 kotlin = "2.2.0"
 voyager = "1.1.0-beta03"
-precompose="1.6.1"
+precompose="1.6.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
