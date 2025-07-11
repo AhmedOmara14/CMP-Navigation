@@ -1,4 +1,4 @@
-package com.omaradev.navigation.ui.home.ui
+package com.omaradev.navigation.Voyager.ui.home.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import com.omaradev.navigation.ui.home.navigation.HomeNavigator
-import com.omaradev.navigation.ui.home.navigation.HomeNavigatorImpl
+import com.omaradev.navigation.Voyager.ui.home.navigation.HomeNavigator
+import com.omaradev.navigation.Voyager.ui.home.navigation.HomeNavigatorImpl
 
 object HomeScreen : Screen {
     @Composable

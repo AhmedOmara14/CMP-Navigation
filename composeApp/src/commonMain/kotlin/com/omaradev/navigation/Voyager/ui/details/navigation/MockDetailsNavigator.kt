@@ -1,4 +1,4 @@
-package com.omaradev.navigation.ui.details.navigation
+package com.omaradev.navigation.Voyager.ui.details.navigation
 
 class MockDetailsNavigator : DetailsNavigator {
     override fun goBack() {}
