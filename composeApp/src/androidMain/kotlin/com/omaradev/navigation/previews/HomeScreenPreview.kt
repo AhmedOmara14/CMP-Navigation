@@ -2,8 +2,8 @@ package com.omaradev.navigation.previews
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.omaradev.navigation.ui.home.navigation.MockHomeNavigator
-import com.omaradev.navigation.ui.home.ui.HomeScreenContent
+import com.omaradev.navigation.Voyager.ui.home.navigation.MockHomeNavigator
+import com.omaradev.navigation.Voyager.ui.home.ui.HomeScreenContent
 
 @Preview
 @Composable

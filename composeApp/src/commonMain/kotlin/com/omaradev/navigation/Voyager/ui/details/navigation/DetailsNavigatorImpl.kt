@@ -1,4 +1,4 @@
-package com.omaradev.navigation.ui.details.navigation
+package com.omaradev.navigation.Voyager.ui.details.navigation
 
 import cafe.adriel.voyager.navigator.Navigator
 
